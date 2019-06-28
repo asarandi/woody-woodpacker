@@ -1,21 +1,32 @@
 # woody-woodpacker
 
-### _simple elf64 binary encryptor_
+### simple elf64 binary encryptor
 
 
 #### building:
 `make`
 
 #### usage:
-`usage: ./woody_woodpacker [-d -k key] binary` produces a `woody` binary
+`usage: ./woody_woodpacker [-d -k key] binary`
+
+`-k` option to specify and encryption key
+
+`-d` option to decrypt an encrypted binary
 
 #### logic:
    - find `.text` section, get file offset and size
    - find `LOAD` segment which contains the `.text` section
-   - go to end of segment and check if there are enough null bytes to insert our decryptor
-   - if yes, encrypt `.text` section, insert decryptor at the end of the segment, increase segment size
-   - save entry point, start address and size of text section in decryptor
+   - go to end of segment and check if there are enough null bytes to insert decryptor
+   - if yes, encrypt `.text` section, insert decryptor at the end of segment, increase segment size
+   - save entry point, start address and size of `.text` section in decryptor
    - change entry point in elf header to point to decryptor
+
+#### encryption:
+random 64 bit key from `/dev/urandom`
+
+for each byte of data:
+- simple `xor` with lower 8 bits of key, 
+- rotate key to the right `>>` by 1
 
 
 #### sample:
@@ -38,5 +49,9 @@ root@debian:/home/user/woody-woodpacker#
 ```
 
 
-##### here is a vimdiff of `hexdump -vC` output for original and encrypted binaries
+#### comparison of hexdumps: before and after encryption
 [![intra/woody_hexdump_vimdiff.png](intra/woody_hexdump_vimdiff.png "intra/woody_hexdump_vimdiff.png")](intra/woody_hexdump_vimdiff.png "intra/woody_hexdump_vimdiff.png")
+
+
+#### intra
+[![intra/grade.png](intra/grade.png "intra/grade.png")](intra/grade.png "intra/grade.png")

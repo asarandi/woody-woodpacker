@@ -6,7 +6,7 @@
 /*   By: sgardner <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/22 22:48:07 by sgardner          #+#    #+#             */
-/*   Updated: 2019/06/26 22:54:18 by asarandi         ###   ########.fr       */
+/*   Updated: 2019/06/27 22:04:52 by asarandi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct	s_woody
 # define E_INVALID  "invalid file, must be linux elf64"
 # define E_READ		"failed to read input file"
 # define E_WRITE	"could not write output file"
-# define E_BADKEY	"invalid key, must be 16 characters long (0-9, a-f)"
+# define E_BADKEY	"invalid key, must be 16 characters long (0-9, a-f)\n"
 # define E_USAGE	"usage: ./woody_woodpacker [-d -k key] binary"
 # define MSG_ENC	"encryption key = %#.16llx\n"
 # define MSG_DEC	"decryption key = %#.16llx\n"

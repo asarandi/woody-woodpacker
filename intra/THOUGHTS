@@ -104,7 +104,7 @@ logic / strategy:
     encrypt, insert decryptor, adjust headers, write output
 
 
-trouble with dynamically linked binaries that are stripped
+trouble with dynamically linked binaries that are missing section headers
 need to look into the interpreter
 
 https://lwn.net/Articles/631631/
