@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "woody.h"
+#include <string.h>
 
 static int	has_overlap(void *data, Elf64_Phdr *target, size_t idx)
 {
@@ -89,7 +90,7 @@ Elf64_Shdr	*get_text_section(void *data)
 	{
 		if (shdr[i].sh_type == SHT_PROGBITS
 			&& (shdr[i].sh_flags & SHF_EXECINSTR)
-			&& !ft_strcmp(".text", strings + shdr[i].sh_name))
+			&& !strcmp(".text", strings + shdr[i].sh_name))
 			return (&shdr[i]);
 	}
 	return (NULL);

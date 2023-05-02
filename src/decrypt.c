@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <string.h>
+#include <stdio.h>
 #include "woody.h"
-#include "ft_printf.h"
 
 int		is_encrypted(t_woody *woody)
 {
@@ -22,7 +23,7 @@ int		is_encrypted(t_woody *woody)
 	size = g_decryptor_len - sizeof(t_dv);
 	original_size = woody->code->p_filesz - g_decryptor_len;
 	data = woody->data + woody->code->p_offset + original_size;
-	return (!ft_memcmp(data, g_decryptor, size));
+	return (!memcmp(data, g_decryptor, size));
 }
 
 int		decrypt_binary(t_woody *woody)
@@ -41,8 +42,8 @@ int		decrypt_binary(t_woody *woody)
 	dv = ptr + (g_decryptor_len - sizeof(t_dv));
 	ehdr->e_entry = dv->entry;
 	woody->key = &dv->key;
-	ft_printf(MSG_DEC, *woody->key);
+	printf(MSG_DEC, *woody->key);
 	encrypt_code(woody);
-	ft_memset(ptr, 0, g_decryptor_len);
+	memset(ptr, 0, g_decryptor_len);
 	return (0);
 }

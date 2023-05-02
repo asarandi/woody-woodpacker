@@ -1,43 +1,24 @@
-NAME	= woody_woodpacker
-CFLAGS	+= -Ofast -Wall -Werror -Wextra
-CFLAGS	+= -Iinc -Ilibft/inc
-LDFLAGS	+= -Llibft -lft
-SRCDIR	= src
-SRC		= \
-			decrypt \
-			encrypt \
-			load \
-			main \
-			segment
-OBJDIR	= obj
-OBJ		= $(patsubst %, $(OBJDIR)/%.o, $(SRC))
-LIBFT	= libft/libft.a
+CFLAGS += -Wall -Werror -Wextra -I include/
+LDFLAGS += -O1
 
-all: $(NAME)
+BIN = woody_woodpacker
+SRC = src/decrypt.c src/encrypt.c src/load.c src/main.c src/segment.c
+SRC += src/g_decryptor.c # created dynamically
+OBJ = $(SRC:.c=.o)
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	mkdir -p $(OBJDIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+all: $(BIN)
 
-$(LIBFT):
-	make -C libft
+$(BIN): $(OBJ)
+	$(CC) -o $@ $(LDFLAGS) $^
 
-$(OBJDIR)/g_decryptor.c:
-	nasm -f bin $(SRCDIR)/decryptor.s -o $(OBJDIR)/g_decryptor
-	cd $(OBJDIR) && xxd -i -c 8 g_decryptor g_decryptor.c
+src/g_decryptor.c: src/g_decryptor.bin
+	xxd -i -c 8 -n g_decryptor $< $@
 
-$(OBJDIR)/g_decryptor.o: $(OBJDIR)/g_decryptor.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(NAME): $(OBJ) $(OBJDIR)/g_decryptor.o $(LIBFT) 
-	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
+src/g_decryptor.bin: src/decryptor.s
+	nasm -f bin $< -o $@
 
 clean:
-	rm -rf $(OBJDIR)
-	make -C libft clean
+	rm -f $(OBJ) src/g_decryptor.c src/g_decryptor.bin
 
-fclean:	clean
-	rm -f $(NAME)
-	make -C libft fclean
-
-re: fclean all
+fclean: clean
+	rm -f $(BIN)

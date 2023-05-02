@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include "woody.h"
-#include "ft_printf.h"
 #include <fcntl.h>
+#include <string.h>
+#include <stdio.h>
 
 static uint64_t	get_random_key(void)
 {
@@ -64,13 +65,13 @@ int				create_encrypted_binary(t_woody *woody)
 	dv.size = woody->text->sh_size;
 	dv.address = woody->text->sh_addr;
 	dv.key = encrypt_code(woody);
-	ft_printf(MSG_ENC, dv.key);
+	printf(MSG_ENC, dv.key);
 	ptr = woody->data + woody->code->p_offset + woody->code->p_filesz;
 	woody->code->p_memsz += g_decryptor_len;
 	woody->code->p_filesz += g_decryptor_len;
 	woody->code->p_flags |= PF_X | PF_W | PF_R;
 	k = g_decryptor_len - sizeof(t_dv);
-	ft_memcpy(ptr, g_decryptor, k);
-	ft_memcpy(ptr + k, &dv, sizeof(t_dv));
+	memcpy(ptr, g_decryptor, k);
+	memcpy(ptr + k, &dv, sizeof(t_dv));
 	return (0);
 }

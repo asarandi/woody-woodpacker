@@ -4,9 +4,8 @@
 woody
 unwoody
 woody_woodpacker
-libft.a
-obj/g_decryptor
-obj/g_decryptor.c
+src/g_decryptor.bin
+src/g_decryptor.c
 
 *.sw*
 

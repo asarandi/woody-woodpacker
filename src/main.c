@@ -11,15 +11,16 @@
 /* ************************************************************************** */
 
 #include "woody.h"
-#include "ft_getopt.h"
-#include "ft_printf.h"
 #include <fcntl.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdio.h>
 
 int			fatal_error(void *p, char *s)
 {
 	free(p);
-	ft_dprintf(2, "%s\n", s);
+	fprintf(stderr, "%s\n", s);
 	return (1);
 }
 
@@ -29,12 +30,12 @@ static int	set_key(t_woody *woody, const char *arg)
 	char			*found;
 	int				i;
 
-	if (*arg && *arg == '0' && *(arg + 1) && TO_LOWER(*(arg + 1)) == 'x')
+	if (*arg && *arg == '0' && *(arg + 1) && tolower(*(arg + 1)) == 'x')
 		arg += 2;
 	i = -1;
 	while (arg[++i])
 	{
-		if (i > 15 || !(found = ft_strchr(BASE16, TO_LOWER(arg[i]))))
+		if (i > 15 || !(found = strchr(BASE16, tolower(arg[i]))))
 			return (0);
 		key = (key * 16) + (found - BASE16);
 	}
@@ -48,18 +49,18 @@ static int	set_key(t_woody *woody, const char *arg)
 
 static int	parse_flags(t_woody *woody, int ac, char *const av[])
 {
-	char	f;
+	int opt;
 
-	while ((f = ft_getopt(ac, av, "dk:")) != -1)
+	while ((opt = getopt(ac, av, "dk:")) != -1)
 	{
-		if (f == 'k' && !set_key(woody, g_optarg))
+		if (opt == 'k' && !set_key(woody, optarg))
 		{
-			ft_dprintf(2, E_BADKEY);
+			fprintf(stderr, E_BADKEY);
 			return (0);
 		}
-		else if (f == 'd')
+		else if (opt == 'd')
 			woody->decrypt = 1;
-		else if (f == '?')
+		else if (opt == '?')
 			return (0);
 	}
 	return (1);
@@ -83,12 +84,12 @@ int			main(int ac, char **av)
 {
 	t_woody		woody;
 
-	ft_memset(&woody, 0, sizeof(woody));
+	memset(&woody, 0, sizeof(woody));
 	if (ac < 2)
 		return (fatal_error(0, E_USAGE));
 	if (!parse_flags(&woody, ac, av))
 		return (1);
-	if (!load_file(&woody, av[g_optind]))
+	if (!load_file(&woody, av[optind]))
 		return (fatal_error(0, E_READ));
 	if (!is_valid_elf64(&woody))
 		return (fatal_error(woody.data, E_INVALID));

@@ -13,6 +13,7 @@
 #include "woody.h"
 #include <fcntl.h>
 #include <stdlib.h>
+#include <string.h>
 
 static int		is_valid_header(void *data)
 {
@@ -25,8 +26,8 @@ static int		is_valid_header(void *data)
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	};
 
-	return (!ft_memcmp(data, elf64_sysv, sizeof(elf64_sysv))
-		|| !ft_memcmp(data, elf64_gnu, sizeof(elf64_gnu)));
+	return (!memcmp(data, elf64_sysv, sizeof(elf64_sysv))
+		|| !memcmp(data, elf64_gnu, sizeof(elf64_gnu)));
 }
 
 int				is_valid_elf64(t_woody *woody)
@@ -60,7 +61,7 @@ int				load_file(t_woody *woody, char *f)
 
 	if ((fd = open(f, O_RDONLY)) == -1
 		|| (woody->filesize = get_filesize(fd)) == -1
-		|| !(woody->data = ft_memalloc(woody->filesize))
+		|| !(woody->data = calloc(1, woody->filesize))
 		|| read(fd, woody->data, woody->filesize) != woody->filesize)
 	{
 		close(fd);

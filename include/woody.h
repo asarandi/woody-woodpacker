@@ -12,9 +12,9 @@
 
 #ifndef WOODY_H
 # define WOODY_H
-# include "libft.h"
 # include <elf.h>
 # include <unistd.h>
+# include <inttypes.h>
 
 typedef struct	s_decryptor_values
 {
@@ -43,8 +43,8 @@ typedef struct	s_woody
 # define E_WRITE	"could not write output file"
 # define E_BADKEY	"invalid key, must be 16 characters long (0-9, a-f)\n"
 # define E_USAGE	"usage: ./woody_woodpacker [-d -k key] binary"
-# define MSG_ENC	"encryption key = %#.16llx\n"
-# define MSG_DEC	"decryption key = %#.16llx\n"
+# define MSG_ENC	"encryption key = %.16" PRIx64 "\n"
+# define MSG_DEC	"decryption key = %.16" PRIx64 "\n"
 # define F_DEC		"unwoody"
 # define F_ENC		"woody"
 # define F_PRNG		"/dev/urandom"
